@@ -1,0 +1,61 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: omada
+spec:
+  type: NodePort
+  selector:
+    app: omada
+  ports:
+    - protocol: TCP
+      port: 8088
+      name: "8088"
+      targetPort: 8088
+    - protocol: TCP
+      port: 8043
+      name: "8043"
+      targetPort: 8043
+    - protocol: TCP
+      port: 8843
+      name: "8843"
+      targetPort: 8843
+    - protocol: TCP
+      port: 29810
+      name: "29810-tcp"
+      targetPort: 29810
+      nodePort: 29810
+    - protocol: UDP
+      port: 29810
+      name: "29810-udp"
+      targetPort: 29810
+      nodePort: 29810
+    - protocol: TCP
+      port: 29811
+      name: "29811-tcp"
+      targetPort: 29811
+      nodePort: 29811
+    - protocol: UDP
+      port: 29811
+      name: "29811-udp"
+      targetPort: 29811
+      nodePort: 29811
+    - protocol: TCP
+      port: 29812
+      name: "29812-tcp"
+      targetPort: 29812
+      nodePort: 29812
+    - protocol: UDP
+      port: 29812
+      name: "29812-udp"
+      targetPort: 29812
+      nodePort: 29812
+    - protocol: TCP
+      port: 29813
+      name: "29813-tcp"
+      targetPort: 29813
+      nodePort: 29813
+    - protocol: UDP
+      port: 29813
+      name: "29813-udp"
+      targetPort: 29813
+      nodePort: 29813

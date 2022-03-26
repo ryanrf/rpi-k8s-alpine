@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex 
+spec:
+  replicas: 1
+  strategy: 
+    type: Recreate
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      name: plex
+      labels:
+        app: plex
+    spec:
+      hostNetwork: true
+      containers:
+      - name: plex
+        image: lscr.io/linuxserver/plex:latest
+        imagePullPolicy: Always
+        env:
+        - name: TZ
+          value: "America/Toronto"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: VERSION
+          value: docker
+        volumeMounts:
+        - mountPath: "/config"
+          name: plex-config
+        - mountPath: "/tv"
+          name: shows
+        - mountPath: "/movies"
+          name: movies
+        - mountPath: "/music"
+          name: music
+      nodeSelector:
+        plex: "true"
+      volumes:
+      - name: plex-config
+        persistentVolumeClaim:
+          claimName: plex-config
+      - name: movies
+        nfs:
+          server: library.faircloth.ca
+          path: /volume1/Videos/Movies
+      - name: shows
+        nfs:
+          server: library.faircloth.ca
+          path: /volume1/Videos/Shows
+      - name: music
+        nfs:
+          server: library.faircloth.ca
+          path: /volume2/Music
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
+      tolerations:
+      - key: "plex"
+        value: "true"
+        operator: "Equal"
+        effect: "NoSchedule"
+      - key: "plex"
+        value: "true"
+        operator: "Equal"
+        effect: "NoExecute"

@@ -1,0 +1,15 @@
+all:
+  children:
+    server:
+      hosts:
+        rpi31.faircloth.ca
+    agent:
+      hosts:
+        rpi33.faircloth.ca:
+        rpi41.faircloth.ca:
+          taints:
+            - plex=true:NoSchedule
+            - plex=true:NoExecute
+          labels:
+            plex: "true"
+        rpi42.faircloth.ca:

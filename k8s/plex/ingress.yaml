@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: plex
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /plex
+        backend:
+          serviceName: plex
+          servicePort: 32400

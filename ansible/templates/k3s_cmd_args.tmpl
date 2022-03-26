@@ -1,0 +1,4 @@
+k3s_cmd_args="{%- if 'server' in group_names %}server {% else %}agent --server https://{{ groups['server'][0] }}:6443{%- endif %} \
+        --snapshotter=native \
+        --node-name {{ inventory_hostname }} \
+        --token {{ k3s_token }}"

@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: radarr 
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /radarr
+        backend:
+          serviceName: radarr
+          servicePort: 7878 

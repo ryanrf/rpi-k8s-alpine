@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sonarr 
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /sonarr
+        backend:
+          serviceName: sonarr 
+          servicePort: 8989

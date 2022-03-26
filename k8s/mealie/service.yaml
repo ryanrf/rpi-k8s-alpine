@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nzbget
+spec:
+  selector:
+    app: nzbget
+  ports:
+    - protocol: TCP
+      port: 6789
+      targetPort: 6789
