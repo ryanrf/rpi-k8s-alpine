@@ -15,6 +15,8 @@ spec:
       labels:
         app: sonarr
     spec:
+      nodeSelector:
+        sonar: "true"
       containers:
       - name: sonarr
         image: lscr.io/linuxserver/sonarr:latest

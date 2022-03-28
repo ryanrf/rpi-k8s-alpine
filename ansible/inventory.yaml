@@ -5,6 +5,7 @@ all:
         rpi31.faircloth.ca
     agent:
       hosts:
+        rpi32.faircloth.ca:
         rpi33.faircloth.ca:
         rpi41.faircloth.ca:
           taints:
@@ -13,3 +14,5 @@ all:
           labels:
             plex: "true"
         rpi42.faircloth.ca:
+          labels:
+            sonar: "true"

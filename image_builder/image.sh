@@ -78,7 +78,7 @@ bind_mount(){
     echo "Done"
 
     echo "Creating bind mount: $SRC will be mounted at $DST"
-    echo "$DST   $SRC    none    defaults,bind       0 0" >> ${ROOTFS_PATH}/etc/fstab
+    echo "$DST   $SRC    none    defaults,bind       0 0" >> ${ROOTFS_PATH}/etc/fstab.update
     done
 }
 
@@ -89,6 +89,8 @@ main(){
   install_extras nfs-utils openssh-client-common
   chroot_exec rc-update add cgroups default
   bind_mount /var/lib /var/log /etc/rancher
+  install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
+  sed -i 's;# make sure /data is mounted;/sbin/bindmounts' ${ROOTFS_PATH}/etc/init.d/data_prepare
 }
 
 if [ ! -z $ROOTFS_PATH ] && [ ! -z $DATAFS_PATH ]

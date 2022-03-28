@@ -7,6 +7,7 @@ depend() {
 
 start_pre() {
     rm -f /tmp/k3s.*
+    grep -q '/var/lib' /etc/fstab || return 1
 }
 
 supervisor=supervise-daemon

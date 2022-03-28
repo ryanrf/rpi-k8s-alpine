@@ -32,3 +32,4 @@
         state: restarted
 # set motd to something helpful for k8s (like node name, node role, IP address)
 # configure uploading state file to S3
+# set root password
