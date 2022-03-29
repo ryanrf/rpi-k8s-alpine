@@ -18,23 +18,12 @@ install_k3s(){
 
 }
 
-check_abs_path(){
-  CHAR=$(echo $1 | cut -c1)
-  if [ $CHAR == "/" ]
-  then
-    True
-  else
-    echo "$1 is not an absolute path"
-    False
-  fi
-}
-
 map_to_data(){
   DATA_DIR="/data"
   for SRC_PATH in "$@"
   do
     # SRC_PATH should be absolute or this will exit
-    if ! check_abs_path $SRC_PATH
+    if [ "$(echo $SRC_PATH | cut -c1)" != "/" ]
     then
       exit 1
     fi
@@ -56,7 +45,7 @@ bind_mount(){
   for path in "$@"
   do
     SRC=$path
-    if check_abs_path $path
+    if [ "$(echo $SRC | cut -c1)" != "/" ]
     then
       exit 1
     fi
@@ -73,11 +62,11 @@ bind_mount(){
       exit 1
     fi
     echo "Copying contents from $FULL_SRC to $FULL_DST..."
-    mkdir -p $FULL_DST
+    mkdir -p $(dirname $FULL_DST)
     cp -a $FULL_SRC $FULL_DST
     echo "Done"
 
-    echo "Creating bind mount: $SRC will be mounted at $DST"
+    echo "Creating bind mount: $DST will be mounted at $SRC"
     echo "$DST   $SRC    none    defaults,bind       0 0" >> ${ROOTFS_PATH}/etc/fstab.update
     done
 }
@@ -90,7 +79,7 @@ main(){
   chroot_exec rc-update add cgroups default
   bind_mount /var/lib /var/log /etc/rancher
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
-  sed -i 's;# make sure /data is mounted;/sbin/bindmounts' ${ROOTFS_PATH}/etc/init.d/data_prepare
+  sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
 }
 
 if [ ! -z $ROOTFS_PATH ] && [ ! -z $DATAFS_PATH ]
