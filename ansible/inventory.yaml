@@ -15,4 +15,4 @@ all:
             plex: "true"
         rpi42.faircloth.ca:
           labels:
-            sonar: "true"
+            nzbget: "true"

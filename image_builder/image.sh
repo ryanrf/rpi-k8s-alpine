@@ -75,8 +75,10 @@ main(){
   # map_to_data /var/lib/rancher /var/lib/kubelet /var/log 
   install_k3s
   # map_to_data /etc/rancher
-  install_extras nfs-utils openssh-client-common
+  install_extras nfs-utils openssh-client-common open-iscsi
   chroot_exec rc-update add cgroups default
+  chroot_exec rc-update add rpcbind default
+  chroot_exec rc-update add iscsid default
   bind_mount /var/lib /var/log /etc/rancher
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare

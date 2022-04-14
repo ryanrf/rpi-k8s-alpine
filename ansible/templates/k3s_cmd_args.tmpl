@@ -1,4 +1,6 @@
 k3s_cmd_args="{%- if 'server' in group_names %}server {% else %}agent --server https://{{ groups['server'][0] }}:6443{%- endif %} \
         --snapshotter=native \
         --node-name {{ inventory_hostname }} \
-        --token {{ k3s_token }}"
+        --token {{ k3s_token }}{%- if labels is defined %} \
+        {% for label in labels %}--node-label {{ label }}={{ labels[label] }}{% endfor %}{% endif %}{%- if taints is defined %} \
+        {% for taint in taints %}--node-taint {{ taint }} {% endfor %}{% endif %}"

@@ -24,6 +24,10 @@
         dest: /data/etc/rancher/k3s/k3s_cmd_args
       notify:
         - restart k3s
+    - name: Make sure rpcbind is started
+      service:
+        name: rcpbind
+        state: started
 
   handlers:
     - name: restart k3s
