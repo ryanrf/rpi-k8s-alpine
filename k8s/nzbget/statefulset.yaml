@@ -1,11 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: nzbget 
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
+  serviceName: nzbget
   selector:
     matchLabels:
       app: nzbget
@@ -37,18 +36,13 @@ spec:
       nodeSelector:
         nzbget: "true"
       volumes:
-      - name: nzbget-config
-        iscsi:
-          chapAuthSession: false
-          targetPortal: 10.10.11.5:3260
-          iqn: iqn.2000-01.com.synology:Library.nzbget-config
-          lun: 1
-          fsType: ext4
-          readOnly: false
-      - name: completed-downloads
-        nfs:
-          server: library.faircloth.ca
-          path: /volume1/downloads/completed
+        - name: nzbget-config
+          persistentVolumeClaim:
+            claimName: nzbget-config-pvc
+        - name: completed-downloads
+          nfs:
+            server: library.faircloth.ca
+            path: /volume1/downloads/completed
       dnsConfig:
         options:
         - name: ndots

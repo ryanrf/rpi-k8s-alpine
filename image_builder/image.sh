@@ -14,6 +14,7 @@ install_k3s(){
   chroot_exec rm -f $K3S_SCRIPT
   install ${INPUT_PATH}/k3s_init_rc ${ROOTFS_PATH}/etc/init.d/k3s
   chroot_exec chmod 755 /etc/init.d/k3s
+  install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
   echo "Installed custom k3s init script"
 
 }
@@ -79,7 +80,7 @@ main(){
   chroot_exec rc-update add cgroups default
   chroot_exec rc-update add rpcbind default
   chroot_exec rc-update add iscsid default
-  bind_mount /var/lib /var/log /etc/rancher
+  bind_mount /var/lib /var/log /etc/rancher /etc/iscsi
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
 }
