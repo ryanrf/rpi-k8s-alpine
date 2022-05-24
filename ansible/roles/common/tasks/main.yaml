@@ -1,0 +1,59 @@
+---
+- name: "Check if file exists, indicating provisioning step has run before"
+  stat:
+    path: "/data/etc/rancher/k3s/k3s_cmd_args"
+  register: k3s_cmd_args
+- name: Copy local image file
+  copy:
+    src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz"
+    dest: "{{ playbook_dir }}/files/sdcard_update.img.gz"
+  delegate_to: localhost
+  when: k3s_cmd_args.stat.exists
+- name: Copy local image file hash
+  copy:
+    src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz.sha256"  # noqa: E501
+    dest: "{{ playbook_dir }}/files/sdcard_update.img.gz.sha256"
+  delegate_to: localhost
+  when: k3s_cmd_args.stat.exists
+- name: Copy image hash update to remote machine
+  copy:
+    src: "{{ playbook_dir }}/files/sdcard_update.img.gz.sha256"
+    dest: /data/sdcard_update.img.gz.sha256
+  register: image_hash
+  when: k3s_cmd_args.stat.exists
+- name: Copy image update to remote machine
+  copy:
+    src: "{{ playbook_dir }}/files/sdcard_update.img.gz"
+    dest: /data/sdcard_update.img.gz
+  when: k3s_cmd_args.stat.exists and image_hash.changed
+- name: Run update
+  shell: "/sbin/update-rootfs /data/sdcard_update.img.gz"
+  when: k3s_cmd_args.stat.exists and image_hash.changed
+  notify:
+    - Reboot host and wait
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+    use: alpine
+- name: Set authorized key from local file
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_ecdsa.pub') }}"
+
+- name: Create config directory
+  ansible.builtin.file:
+    path: /data/etc/rancher/k3s
+    state: directory
+    mode: '0755'
+- name: Copy/ Update k3s command args
+  template:
+    src: templates/k3s_cmd_args.tmpl
+    dest: /data/etc/rancher/k3s/k3s_cmd_args
+  notify:
+    - restart k3s
+- name: Make sure k3s is running
+  service:
+    name: k3s
+    state: started
