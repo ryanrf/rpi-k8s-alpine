@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  connection: local
+  vars_files:
+    - vars_enc
+  tasks:
+    - name: find all yaml files
+      find:
+        paths: "{{ playbook_dir }}/templates"
+        recurse: yes
+        patterns: '*.yaml'
+    - name: generate k8s files
+      template:
+        src: 
