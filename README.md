@@ -11,17 +11,17 @@ The `image_builder` directory contains all relevant files to build raspberry pi 
 **Please remember to check the device of the sdcard (`sudo fdisk -l`), don't just copy `/dev/sdc` from the examples**
 Usage:
 > Build the image and write to sd card (at /dev/sdc)
-```bash
+```shell
 ./build_image.sh all /dev/sdc
 ```
 
 > Just build the image
-```bash
+```shell
 ./build_image.sh build
 ```
 
 > Just write the image to the sdcard
-```bash
+```shell
 ./build_image write /dev/sdc
 ```
 
@@ -30,9 +30,23 @@ The `ansible` directory contains the relevant files for pushing the initial k3s 
 
 Make sure to add your own hosts to the `inventory.yaml` file, where you can set some host specific options, like taints, labels, etc. Check the existing one for examples.
 
-For provisioning:
-```bash
+## Provisioning a new host
+Assuming you've built the image and written it to the SD card (`./build_image.sh build`, then `./build_iamge.sh write /dev/sdc` or just `./build_image.sh all /dev/sdc`), you'll then need to have ansible setup the host with:
+```shell
 ansible-playbook --ask-vault-pass provision.yaml
+```
+Once ansible finishes the hosts should start up k3s.
+
+## Upgrading an existing host
+Once an SD card has the proper partition structure (two read-only filesystems, with a writable data partition), the SD cards can be updated without removing them from the raspberry pi node (pretty neat, eh?)
+
+Just make sure to update your existing image (`./build_iamge.sh build`), then run ansible with:
+```shell
+ansible-playbook upgrade_image.yaml
+```
+> you can optionally limit the host to upgrade with `-l host` like this:
+```shell
+ansible-playbook -l host.domain.com upgrade_image.yaml
 ```
 
 # Kubernetes

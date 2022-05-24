@@ -4,22 +4,33 @@
   tasks:
     - name: Copy local image file
       copy:
-        src: {{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz
-        dest: {{ playbook_dir }}/files/sdcard_update.img.gz
+        src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz"
+        dest: "{{ playbook_dir }}/files/sdcard_update.img.gz"
+      delegate_to: localhost
+    - name: Copy local image file hash
+      copy:
+        src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz.sha256"
+        dest: "{{ playbook_dir }}/files/sdcard_update.img.gz.sha256"
       delegate_to: localhost
     - name: Copy image update to remote machine
       copy:
-        src: {{ playbook_dir }}/files/sdcard_update.img.gz
+        src: "{{ playbook_dir }}/files/sdcard_update.img.gz"
         dest: /data/sdcard_update.img.gz
-    - name: Run update
-      shell: /sbin/update_root_fs /data/sdcard_update.img.gz
-		- import_playbook: provision.yaml
+    - name: Copy image hash update to remote machine
+      copy:
+        src: "{{ playbook_dir }}/files/sdcard_update.img.gz.sha256"
+        dest: /data/sdcard_update.img.gz.sha256
+      notify:
+        - Run update
+        - Reboot host and wait
   handlers:
-   - name: Reboot host and wait for it to restart
-	   reboot:
-	     msg: "Reboot initiated by Ansible"
-	     connect_timeout: 5
-	     reboot_timeout: 600
-	     pre_reboot_delay: 0
-	     post_reboot_delay: 30
-	     test_command: whoami 
+    - name: Run update
+      shell: "/sbin/update-rootfs /data/sdcard_update.img.gz"
+    - name: Reboot host and wait
+      reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 5
+        reboot_timeout: 600
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+        test_command: whoami
