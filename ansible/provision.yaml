@@ -1,0 +1,50 @@
+---
+- hosts: all
+  become: "yes"
+  vars_files:
+    - vars_enc
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+        use: alpine
+    - name: Set authorized key from local file
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_ecdsa.pub') }}"
+    - name: Create config directory
+      ansible.builtin.file:
+        path: /data/etc/rancher/k3s
+        state: directory
+        mode: '0755'
+    - name: Make sure nodes have iscsid.conf
+      copy:
+        src: "{{ playbook_dir }}/files/iscsid.conf"
+        dest: /data/etc/iscsi/iscsid.conf
+      notify:
+        - restart iscsid
+        - restart k3s
+    - name: Copy/ Update k3s command args
+      template:
+        src: templates/k3s_cmd_args.tmpl
+        dest: /data/etc/rancher/k3s/k3s_cmd_args
+      notify:
+        - restart k3s
+    - name: Make sure k3s is started
+      service:
+        name: k3s
+        state: started
+
+  handlers:
+    - name: restart k3s
+      service:
+        name: k3s
+        state: restarted
+    - name: restart iscsid
+      service:
+        name: iscsid
+        state: restarted
+# set motd to something helpful for k8s (like node name, node role, IP address)
+# configure uploading state file to S3
+# set root password

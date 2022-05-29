@@ -4,7 +4,7 @@ namespace: dl
 resources:
 - namespace.yaml
 - statefulset.yaml
+- service.yaml
 - ingress.yaml
-- pv.yaml
 commonLabels:
   app: nzbget

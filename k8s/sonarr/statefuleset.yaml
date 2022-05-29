@@ -1,23 +1,22 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: radarr 
+  name: sonarr 
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
+  serviceName: sonarr
   selector:
     matchLabels:
-      app: radarr
+      app: sonarr
   template:
     metadata:
-      name: radarr
+      name: sonarr
       labels:
-        app: radarr
+        app: sonarr
     spec:
       containers:
-      - name: radarr
-        image: lscr.io/linuxserver/radarr:latest
+      - name: sonarr
+        image: lscr.io/linuxserver/sonarr:latest
         imagePullPolicy: Always
         env:
         - name: TZ
@@ -27,20 +26,20 @@ spec:
         - name: PGID
           value: "1000"
         ports:
-          - name: radarr
-            containerPort: 7878
+          - name: sonarr
+            containerPort: 8989 
         volumeMounts:
         - mountPath: "/config"
-          name: radarr-config
+          name: sonarr-config
         - mountPath: "/downloads/completed"
           name: completed-downloads
-        - mountPath: "/movies"
-          name: movies
+        - mountPath: "/tv"
+          name: shows
       volumes:
-      - name: radarr-config
+      - name: sonarr-config
         iscsi:
           targetPortal: 10.10.11.5:3260
-          iqn: iqn.2000-01.com.synology:Library.radarr-config
+          iqn: iqn.2000-01.com.synology:Library.sonarr-config
           lun: 1
           fsType: ext4
           readOnly: false
@@ -48,11 +47,7 @@ spec:
         nfs:
           server: library.faircloth.ca
           path: /volume1/downloads/completed
-      - name: movies
+      - name: shows
         nfs:
           server: library.faircloth.ca
-          path: /volume1/Videos/Movies
-      dnsConfig:
-        options:
-        - name: ndots
-          value: "1"
+          path: /volume1/Videos/Shows

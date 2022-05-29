@@ -7,6 +7,9 @@ spec:
   - http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: organizr
-          servicePort: 80
+          service:
+            name: organizr
+            port:
+              number: 80

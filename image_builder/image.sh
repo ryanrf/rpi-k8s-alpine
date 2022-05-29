@@ -64,7 +64,12 @@ bind_mount(){
     fi
     echo "Copying contents from $FULL_SRC to $FULL_DST..."
     mkdir -p $(dirname $FULL_DST)
+    echo "ls -l FULL_SRC -> $FULL_SRC"
+    ls -l $FULL_SRC
+    echo "cp -a $FULL_SRC $FULL_DST"
     cp -a $FULL_SRC $FULL_DST
+    echo "ls -l FULL_DST -> $FULL_DST"
+    ls -l $FULL_DST
     echo "Done"
 
     echo "Creating bind mount: $DST will be mounted at $SRC"
@@ -82,6 +87,8 @@ main(){
   bind_mount /var/lib /var/log /etc/rancher /etc/iscsi
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
+  echo "/data/etc/iscsi"
+  ls -l ${DATAFS_PATH}/etc/iscsi
 }
 
 if [ ! -z $ROOTFS_PATH ] && [ ! -z $DATAFS_PATH ]

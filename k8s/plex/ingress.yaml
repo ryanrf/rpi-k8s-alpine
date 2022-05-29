@@ -7,6 +7,7 @@ spec:
   - http:
       paths:
       - path: /plex
+        pathType: ImplementationSpecific
         backend:
-          serviceName: plex
-          servicePort: 32400
+          name: plex
+          port: 32400

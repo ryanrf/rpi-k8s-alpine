@@ -7,6 +7,9 @@ spec:
   - http:
       paths:
       - path: /sonarr
+        pathType: ImplementationSpecific
         backend:
-          serviceName: sonarr 
-          servicePort: 8989
+          service:
+            name: sonarr 
+            port: 
+              number: 8989

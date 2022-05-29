@@ -7,6 +7,9 @@ spec:
   - http:
       paths:
       - path: /radarr
+        pathType: ImplementationSpecific
         backend:
-          serviceName: radarr
-          servicePort: 7878 
+          service:
+            name: radarr
+            port:
+              number: 7878
