@@ -1,22 +1,11 @@
 #!/bin/sh
 set -e
-export INSTALL_K3S_SKIP_START="true"
 
-install_k3s(){
-  K3S_SCRIPT="/tmp/k3os_install.sh"
-  wget -qO ${ROOTFS_PATH}${K3S_SCRIPT} https://get.k3s.io
-  chroot_exec chmod 755 $K3S_SCRIPT
-  # echo "Setting k3s log location to $K3S_LOG_DIR"
-  # sed -i "s;LOG_FILE=/var/log/\${SYSTEM_NAME}.log;LOG_FILE=/data/var/log/\${SYSTEM_NAME}.log;g" ${ROOTFS_PATH}/${K3S_SCRIPT}
-  echo "Installing k3os..."
-  chroot_exec $K3S_SCRIPT
+install_pkg(){
+  PKG="$@"
+  echo "Installing $PKG..."
+  chroot_exec apk add --no-cache $PKG
   echo "Done"
-  chroot_exec rm -f $K3S_SCRIPT
-  install ${INPUT_PATH}/k3s_init_rc ${ROOTFS_PATH}/etc/init.d/k3s
-  chroot_exec chmod 755 /etc/init.d/k3s
-  install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
-  echo "Installed custom k3s init script"
-
 }
 
 map_to_data(){
@@ -35,12 +24,6 @@ map_to_data(){
   done
 }
   
-install_extras(){
-  PKG="$@"
-  echo "Installing $PKG..."
-  chroot_exec apk add --no-cache $PKG
-  echo "Done"
-}
 
 bind_mount(){
   for path in "$@"
@@ -73,22 +56,31 @@ bind_mount(){
     echo "Done"
 
     echo "Creating bind mount: $DST will be mounted at $SRC"
-    echo "$DST   $SRC    none    defaults,bind       0 0" >> ${ROOTFS_PATH}/etc/fstab.update
+    echo "$DST   $SRC    none    defaults,bind       0 0" >> ${ROOTFS_PATH}/etc/fstab
     done
 }
 
+flannel_workaround(){
+  if [ -f /usr/libexec/flannel-arm64 ] && [ -z /usr/libexec/flannel ]
+  then
+    echo "'/usr/libexec/flannel' was not found"
+    echo "Found '/usr/libexec/flannel-arm64'. Creating symlink to '/usr/libexec/flannel'..."
+    ln -sf /usr/libexec/flannel-arm64 /usr/libexec/flannel
+  fi
+}
+
 main(){
-  # map_to_data /var/lib/rancher /var/lib/kubelet /var/log 
-  install_k3s
-  # map_to_data /etc/rancher
-  install_extras nfs-utils openssh-client-common open-iscsi multipath-tools
-  chroot_exec rc-update add cgroups default
-  chroot_exec rc-update add rpcbind default
-  bind_mount /var/lib /var/log /etc/rancher /etc/iscsi
+  install_pkg k3s nfs-utils openssh-client-common open-iscsi multipath-tools
+  flannel_workaround
+  install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
+  # Right now cni-plugin-flannel is not included with 
+  # /etc/rancher is only created on first startup, so must be manually created
+  mkdir -p ${ROOTFS_PATH}/etc/rancher
+  # chroot_exec rc-update add cgroups default
+  # chroot_exec rc-update add rpcbind default
+  bind_mount /var/lib /var/log /etc/rancher
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
-  echo "/data/etc/iscsi"
-  ls -l ${DATAFS_PATH}/etc/iscsi
 }
 
 if [ ! -z $ROOTFS_PATH ] && [ ! -z $DATAFS_PATH ]

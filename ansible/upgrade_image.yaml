@@ -2,31 +2,23 @@
 - hosts: all
   become: "yes"
   tasks:
-    - name: Copy local image file
-      copy:
-        src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz"
-        dest: "{{ playbook_dir }}/files/sdcard_update.img.gz"
-      delegate_to: localhost
-    - name: Copy local image file hash
-      copy:
-        src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz.sha256"
-        dest: "{{ playbook_dir }}/files/sdcard_update.img.gz.sha256"
-      delegate_to: localhost
     - name: Copy image hash update to remote machine
       copy:
-        src: "{{ playbook_dir }}/files/sdcard_update.img.gz.sha256"
+        src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz.sha256"
         dest: /data/sdcard_update.img.gz.sha256
       register: image_hash
+
     - name: Copy image update to remote machine
       copy:
-        src: "{{ playbook_dir }}/files/sdcard_update.img.gz"
+        src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz"
         dest: /data/sdcard_update.img.gz
       when: image_hash.changed
+
     - name: Run update
       shell: "/sbin/update-rootfs /data/sdcard_update.img.gz"
       when: image_hash.changed
-      # notify:
-      #   - Reboot host and wait
+      notify:
+        - Reboot host and wait
     #- name: update motd
     #  template:
     #    src: templates/motd
