@@ -26,30 +26,15 @@
         src: templates/k3s_confd.tmpl
         dest: /data/k3s_config
 
-    - name: Copy iscsid.conf
-      copy:
-        src: "{{ playbook_dir }}/files/iscsid.conf"
-        dest: /data/iscsid.conf
-
     - name: md5 sum of old k3s config
       stat:
         path: "/etc/conf.d/k3s"
       register: old_k3s_config
 
-    - name: md5 sum of old iscsi config
-      stat:
-        path: "/etc/iscsi/iscsid.conf"
-      register: old_iscsi_config
-
     - name: md5 sum of new k3s config
       stat:
         path: "/data/k3s_config"
       register: new_k3s_config
-
-    - name: md5 sum of new iscsi config
-      stat:
-        path: "/data/iscsid.conf"
-      register: new_iscsi_config
 
     - name: compare k3s config files
       command: test {{ old_k3s_config.stat.checksum }} = {{ new_k3s_config.stat.checksum }}
@@ -59,16 +44,6 @@
       notify:
         - stop k3s
         - remount-rw
-
-    - name: compare iscsi config files
-      command: test {{ old_iscsi_config.stat.checksum }} = {{ new_iscsi_config.stat.checksum }}
-      failed_when: iscsi_file_diff.stderr
-      changed_when: "iscsi_file_diff.rc != 0"
-      register: iscsi_file_diff
-      notify:
-        - stop k3s
-        - remount-rw
-        - restart iscsi
 
     - name: trigger remount
       meta: flush_handlers
@@ -85,15 +60,6 @@
         dest: "/usr/libexec/cni/flannel"
         state: link
       when: k3s_file_diff.changed
-
-    - name: install new iscsi config
-      copy:
-        src: /data/iscsid.conf
-        dest: /etc/iscsi/iscsid.conf
-        remote_src: yes
-      when: iscsi_file_diff.changed
-      notify:
-        - remount-ro
 
     - name: install new k3s config
       copy:
@@ -112,15 +78,22 @@
         path: /data/k3s_config
         state: absent
 
-    - name: delete new iscsi config from temp location
-      file:
-        path: /data/iscsi.conf
-        state: absent
+    - name: Copy iscsid.conf
+      copy:
+        src: "{{ playbook_dir }}/files/iscsid.conf"
+        dest: /etc/iscsi/iscsid.conf
+      notify:
+        - restart iscsid
+        - restart k3s
 
-    - name: Make sure k3s is started
+    - name: Make sure required services are started
       service:
-        name: k3s
+        name: item
         state: started
+      loop:
+        - k3s
+        - iscsid
+        - rpcbind
 
   handlers:
     - name: restart k3s
