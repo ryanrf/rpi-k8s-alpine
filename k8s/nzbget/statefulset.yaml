@@ -33,6 +33,8 @@ spec:
           name: nzbget-config
         - mountPath: "/downloads/completed"
           name: completed-downloads
+        - mountPath: "/downloads/incomplete"
+          name: incomplete-downloads
       nodeSelector:
         nzbget: "true"
       volumes:
@@ -43,6 +45,9 @@ spec:
             lun: 1
             fsType: ext4
             readOnly: false
+        - name: incomplete-downloads
+          hostPath:
+            path: /data/k3s/incomplete-downloads
         - name: completed-downloads
           nfs:
             server: library.faircloth.ca
