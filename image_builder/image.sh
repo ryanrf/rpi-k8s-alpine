@@ -70,15 +70,14 @@ flannel_workaround(){
 }
 
 main(){
-  install_pkg k3s nfs-utils openssh-client-common open-iscsi multipath-tools
+  install_pkg k3s nfs-utils openssh-client-common open-iscsi multipath-tools rpcbind
   flannel_workaround
   install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
-  # Right now cni-plugin-flannel is not included with 
   # /etc/rancher is only created on first startup, so must be manually created
   mkdir -p ${ROOTFS_PATH}/etc/rancher
   # chroot_exec rc-update add cgroups default
-  # chroot_exec rc-update add rpcbind default
-  bind_mount /var/lib /var/log /etc/rancher
+  chroot_exec rc-update add rpcbind default
+  bind_mount /var/lib /var/log /etc/rancher /etc/iscsi
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
 }
