@@ -4,7 +4,16 @@ metadata:
   name: plex
 spec:
   rules:
-  - http:
+  - host: plex.faircloth.ca
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          name: plex
+          port: 32400
+  - host: media.faircloth.ca
+    http:
       paths:
       - path: /plex
         pathType: ImplementationSpecific

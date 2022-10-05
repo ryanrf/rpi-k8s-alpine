@@ -4,7 +4,8 @@ metadata:
   name: nzbget
 spec:
   rules:
-  - http:
+  - host: media.faircloth.ca
+    http:
       paths:
       - path: /nzbget
         pathType: ImplementationSpecific

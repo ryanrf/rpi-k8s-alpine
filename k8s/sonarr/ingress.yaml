@@ -4,7 +4,8 @@ metadata:
   name: sonarr 
 spec:
   rules:
-  - http:
+  - host: media.faircloth.ca
+    http:
       paths:
       - path: /sonarr
         pathType: ImplementationSpecific

@@ -4,7 +4,8 @@ metadata:
   name: organizr
 spec:
   rules:
-  - http:
+  - host: media.faircloth.ca
+    http:
       paths:
       - path: /
         pathType: ImplementationSpecific

@@ -7,7 +7,17 @@ spec:
   - host: calibre.faircloth.ca
     http:
       paths:
-      - path: /calibre
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: calibre-web
+            port: 
+              number: 8083
+  - host: books.faircloth.ca
+    http:
+      paths:
+      - path: /
         pathType: ImplementationSpecific
         backend:
           service:
@@ -20,10 +30,6 @@ kind: Middleware
 metadata:
   name: calibre-web
 spec:
-  stripPrefix:
-    prefixes:
-      - /calibre
-    forceSlash: true
   headers:
       customRequestHeaders:
         X-Script-Name: "/calibre"
