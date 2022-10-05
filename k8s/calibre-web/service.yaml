@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: calibre-web
+spec:
+  selector:
+    app: calibre-web 
+  ports:
+    - protocol: TCP
+      port: 8083 
+      targetPort: 8083 
