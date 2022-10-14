@@ -1,6 +1,14 @@
 # Raspberry Pi Kubernetes Cluster
-This repo contains all that is needed to set up and maintain a raspberry pi kubernetes cluster.
-> Note: If you want to build the image on architecture different then the pi's (e.g. build the image on an x86 system and have the images run on arm/ aarch64) please see [here](https://github.com/raspi-alpine/builder) for a docker command to run that will prep your system
+__This project is based on [raspi-alpine](https://github.com/raspi-alpine/builder)__
+
+## Multi-arch
+If you want to build the image on architecture different then the pi's (e.g. build the image on an x86 system and have the images run on arm/ aarch64) just run:
+```
+docker run --privileged --rm multiarch/qemu-user-static --persistent yes
+```
+> this is already installed if using docker desktop
+
+## Which pi?
 
 While you can try using at least a raspberry pi 3B+, a raspberry pi 4 is definitely recommended for all worker nodes. The control node should be fine being raspberry pi 3, but it will be slow.
 
