@@ -88,7 +88,7 @@
 
     - name: Make sure required services are started
       service:
-        name: item
+        name: "{{ item }}"
         state: started
       loop:
         - k3s
