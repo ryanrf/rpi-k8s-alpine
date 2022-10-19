@@ -69,7 +69,7 @@ flannel_workaround(){
   fi
 }
 
-main(){
+k8s_main(){
   install_pkg k3s nfs-utils openssh-client-common open-iscsi multipath-tools rpcbind
   flannel_workaround
   install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
@@ -82,9 +82,18 @@ main(){
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
 }
 
+# For use when setting up non-k3s system
+default_main(){
+  install_pkg nfs-utils openssh-client-common
+  install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
+  bind_mount /var/lib /var/log 
+  install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
+  sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
+ }
+
 if [ ! -z $ROOTFS_PATH ] && [ ! -z $DATAFS_PATH ]
 then
-  main
+  default_main
 else
     echo "ROOTFS_PATH and DATAFS_PATH are not set - this is not meant to be run outside image buliding"
     exit 1
