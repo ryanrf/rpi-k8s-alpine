@@ -8,6 +8,13 @@ install_pkg(){
   echo "Done"
 }
 
+install_pkg_from_testing(){
+  PKG="$@"
+  echo "Installing $PKG..."
+  chroot_exec apk add --no-cache $PKG --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing
+  echo "Done"
+}
+
 map_to_data(){
   DATA_DIR="/data"
   for SRC_PATH in "$@"
@@ -84,7 +91,9 @@ k8s_main(){
 
 # For use when setting up non-k3s system
 default_main(){
-  install_pkg nfs-utils openssh-client-common
+  install_pkg nfs-utils openssh-client-common vim git tmux fish openssh-client cfdisk openssh-keygen rsync py3-pip docker
+  install_pkg_from_testing kubectl
+  chroot_exec adduser -h /data/home/ryan -s /usr/bin/fish -H ryan
   install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
   bind_mount /var/lib /var/log 
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
