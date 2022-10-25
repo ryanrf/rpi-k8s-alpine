@@ -1,12 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: omada
+  name: omada 
 spec:
   rules:
-  - http:
+  - host: omada.faircloth.ca
+    http:
       paths:
-      - path: /omada
+      - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: omada
-          servicePort: 8088
+          service:
+            name: omada-manage
+            port: 
+              number: 8088

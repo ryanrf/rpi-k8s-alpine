@@ -1,61 +1,53 @@
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: omada
+  name: omada-tcp
 spec:
-  type: NodePort
+  type: LoadBalancer
+  externalTrafficPolicy: Local
   selector:
-    app: omada
+    statefulset.kubernetes.io/pod-name: omada-0
   ports:
-    - protocol: TCP
+    - name: manage-http
+      protocol: TCP
       port: 8088
-      name: "8088"
       targetPort: 8088
-    - protocol: TCP
+    - name: manage-https
+      protocol: TCP
       port: 8043
-      name: "8043"
       targetPort: 8043
-    - protocol: TCP
-      port: 8843
-      name: "8843"
-      targetPort: 8843
-    - protocol: TCP
-      port: 29810
-      name: "29810-tcp"
-      targetPort: 29810
-      nodePort: 29810
-    - protocol: UDP
-      port: 29810
-      name: "29810-udp"
-      targetPort: 29810
-      nodePort: 29810
-    - protocol: TCP
+    - name: port-mngr-v1
+      protocol: TCP
       port: 29811
-      name: "29811-tcp"
       targetPort: 29811
-      nodePort: 29811
-    - protocol: UDP
-      port: 29811
-      name: "29811-udp"
-      targetPort: 29811
-      nodePort: 29811
-    - protocol: TCP
+    - name: port-adopt-v1
+      protocol: TCP
       port: 29812
-      name: "29812-tcp"
       targetPort: 29812
-      nodePort: 29812
-    - protocol: UDP
-      port: 29812
-      name: "29812-udp"
-      targetPort: 29812
-      nodePort: 29812
-    - protocol: TCP
+    - name: port-upg-v1
+      protocol: TCP
       port: 29813
-      name: "29813-tcp"
       targetPort: 29813
-      nodePort: 29813
-    - protocol: UDP
-      port: 29813
-      name: "29813-udp"
-      targetPort: 29813
-      nodePort: 29813
+    - name: port-mngr-v2
+      protocol: TCP
+      port: 29814
+      targetPort: 29814
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omada-udp
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    statefulset.kubernetes.io/pod-name: omada-0
+  ports:
+    - name: port-app-disc
+      protocol: UDP
+      port: 27001
+      targetPort: 27001
+    - name: port-disc
+      protocol: UDP
+      port: 29810
+      targetPort: 29810
