@@ -84,25 +84,29 @@ k8s_main(){
   mkdir -p ${ROOTFS_PATH}/etc/rancher
   # chroot_exec rc-update add cgroups default
   chroot_exec rc-update add rpcbind default
-  bind_mount /var/lib /var/log /etc/rancher /etc/iscsi
+  bind_mount /var/lib /var/log /etc/rancher /etc/iscsi 
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
 }
 
-# For use when setting up non-k3s system
-default_main(){
+# For use when setting up jump box
+jump_main(){
   install_pkg nfs-utils openssh-client-common vim git tmux fish openssh-client cfdisk openssh-keygen rsync py3-pip docker
   install_pkg_from_testing kubectl
   chroot_exec adduser -h /data/home/ryan -s /usr/bin/fish -H ryan
+  chroot_exec addgroup ryan wheel
+  chroot_exec addgroup ryan docker
+  chroot_exec rc-update add docker default
   install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
-  bind_mount /var/lib /var/log 
+  bind_mount /var/lib /var/log /etc/docker
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
  }
 
 if [ ! -z $ROOTFS_PATH ] && [ ! -z $DATAFS_PATH ]
 then
-  default_main
+  jump_main
+  # k8s_main
 else
     echo "ROOTFS_PATH and DATAFS_PATH are not set - this is not meant to be run outside image buliding"
     exit 1
