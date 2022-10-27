@@ -91,7 +91,7 @@ k8s_main(){
 
 # For use when setting up jump box
 jump_main(){
-  install_pkg nfs-utils openssh-client-common vim git tmux fish openssh-client cfdisk openssh-keygen rsync py3-pip docker
+  install_pkg nfs-utils openssh-client-common vim git tmux fish openssh-client cfdisk openssh-keygen rsync py3-pip docker curl
   install_pkg_from_testing kubectl
   chroot_exec adduser -h /data/home/ryan -s /usr/bin/fish -H ryan
   chroot_exec addgroup ryan wheel
@@ -105,8 +105,8 @@ jump_main(){
 
 if [ ! -z $ROOTFS_PATH ] && [ ! -z $DATAFS_PATH ]
 then
-  jump_main
-  # k8s_main
+  # jump_main
+  k8s_main
 else
     echo "ROOTFS_PATH and DATAFS_PATH are not set - this is not meant to be run outside image buliding"
     exit 1
