@@ -4,16 +4,6 @@ metadata:
   name: calibre-web
 spec:
   rules:
-  - host: calibre.faircloth.ca
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: calibre-web
-            port: 
-              number: 8083
   - host: books.faircloth.ca
     http:
       paths:

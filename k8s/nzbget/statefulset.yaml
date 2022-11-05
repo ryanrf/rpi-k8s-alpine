@@ -36,7 +36,7 @@ spec:
         - mountPath: "/downloads/incomplete"
           name: incomplete-downloads
       nodeSelector:
-        nzbget: "true"
+        hiperf: "true"
       volumes:
         - name: nzbget-config
           iscsi:

@@ -14,4 +14,4 @@ all:
             plex: "true"
         rpi42.faircloth.ca:
           labels:
-            nzbget: "true"
+            hiperf: "true"
