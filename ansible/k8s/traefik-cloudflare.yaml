@@ -6,11 +6,11 @@ metadata:
 spec:
   valuesContent: |-
     additionalArguments:
-      - --certificatesResolvers.le.acme.dnsChallenge=true
-      - --certificatesResolvers.le.acme.dnsChallenge.provider=cloudflare
-      - --certificatesresolvers.le.acme.email=admin@faircloth.ca
-      - --certificatesresolvers.le.acme.storage=acme.json
-      - --certificatesresolvers.le.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      - "--certificatesResolvers.le.acme.dnsChallenge=true"
+      - "--certificatesResolvers.le.acme.dnsChallenge.provider=cloudflare"
+      - "--certificatesresolvers.le.acme.email=admin@faircloth.ca"
+      - "--certificatesresolvers.le.acme.storage=acme.json"
+      - "--certificatesresolvers.le.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     env:
       - name: CF_API_EMAIL
         value: ryan@faircloth.ca
