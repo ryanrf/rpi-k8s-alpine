@@ -14,7 +14,7 @@ spec:
     env:
     - name: CF_API_EMAIL
       value: ryan@faircloth.ca
-    - name: CF_API_KEY
+    - name: CF_ZONE_API_TOKEN
       valueFrom:
         secretKeyRef:
           name: cloudflare-credentials
