@@ -1,7 +1,7 @@
 #!/bin/sh
 SERVICES="nzbget sonarr radarr organizr plex calibre-web"
 
-if [[ ! -z $1 ]]
+if [ ! -z $1 ]
 then
   SERVICES=$@
 fi

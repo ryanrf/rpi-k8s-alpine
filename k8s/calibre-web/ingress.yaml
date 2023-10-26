@@ -2,6 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: calibre-web
+#  annotations:
+#    traefik.ingress.kubernetes.io/router.tls: "true"
+#    traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
   - host: books.faircloth.ca
@@ -14,20 +17,3 @@ spec:
             name: calibre-web
             port: 
               number: 8083
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: calibre-web
-spec:
-  headers:
-      customRequestHeaders:
-        X-Script-Name: "/calibre"
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: limit
-spec:
-  buffering:
-    maxRequestBodyBytes: 20971520

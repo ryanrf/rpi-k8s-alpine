@@ -35,6 +35,8 @@ spec:
           name: completed-downloads
         - mountPath: "/tv"
           name: shows
+        - mountPath: "/torrents"
+          name: completed-torrents
       volumes:
       - name: sonarr-config
         iscsi:
@@ -51,3 +53,7 @@ spec:
         nfs:
           server: library.faircloth.ca
           path: /volume1/Videos/Shows
+      - name: completed-torrents
+        nfs:
+          server: library.faircloth.ca
+          path: /volume1/downloads/completed_torrents
