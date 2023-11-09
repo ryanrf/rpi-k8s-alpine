@@ -1,4 +1,4 @@
 FROM alpine:3.18
 
-RUN apk add --no-cache transmission-daemon && mkdir /etc/transmission-daemon/
+RUN apk add --no-cache transmission-daemon && mkdir /etc/transmission/
 ENTRYPOINT ["transmission-daemon", "--foreground", "--config-dir", "/etc/transmission", "--download-dir", "/downloads/complete", "--incomplete-dir", "/downloads/incomplete"]
