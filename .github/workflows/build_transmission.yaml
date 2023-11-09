@@ -37,8 +37,7 @@ jobs:
         with:
           image: transmission
           file: dockerfiles/transmission_Dockerfile
-          platforms: 
-          - linux/arm64
+          platforms: linux/amd64,linux/arm64
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
