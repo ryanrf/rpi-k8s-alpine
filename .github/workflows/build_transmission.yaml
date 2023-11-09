@@ -16,6 +16,8 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -35,7 +37,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          file: dockerfiles/transmission_Dockerfile
+          file: ./dockerfiles/transmission_Dockerfile
           platforms: linux/amd64,linux/arm64
           context: .
           push: true
