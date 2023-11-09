@@ -16,17 +16,11 @@ spec:
     spec:
       containers:
       - name: transmission
-        image: lscr.io/linuxserver/transmission:latest
+        image: ghcr.io/ryanrf/rpi-k8s-alpine:transmission
         imagePullPolicy: Always
         env:
         - name: TZ
           value: "America/Toronto"
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: WHITELIST
-          value: "10.0.0.0/8"
         ports:
           - name: transmission
             containerPort: 9091
@@ -38,18 +32,24 @@ spec:
         volumeMounts:
         - mountPath: "/config"
           name: transmission-config
-        - mountPath: "/downloads"
-          name: completed-downloads
+        - mountPath: "/downloads/complete"
+          name: complete-downloads
+        - mountPath: "/downloads/incomplete"
+          name: incomplete-downloads
       nodeSelector:
         hiperf: "true"
       volumes:
         - name: transmission-config
           configMap:
             name: transmission-config
-        - name: completed-downloads
+        - name: complete-downloads
           nfs:
             server: library.faircloth.ca
             path: /volume1/downloads/completed_torrents
+        - name: incomplete-downloads
+          nfs:
+            server: library.faircloth.ca
+            path: /volume1/downloads/incompleted_torrents
       dnsConfig:
         options:
         - name: ndots
