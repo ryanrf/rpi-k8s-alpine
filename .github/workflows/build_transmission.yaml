@@ -33,6 +33,5 @@ jobs:
         with:
           file: ./dockerfiles/transmission_Dockerfile
           platforms: linux/amd64,linux/arm64
-          context: .
           push: true
           tags: ghcr.io/transmission:latest
