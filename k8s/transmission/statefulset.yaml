@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: transmission
-        image: ghcr.io/ryanrf/rpi-k8s-alpine:transmission
+        image: ghcr.io/ryanrf/transmission:latest
         imagePullPolicy: Always
         env:
         - name: TZ
