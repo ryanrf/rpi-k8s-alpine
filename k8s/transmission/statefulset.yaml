@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: transmission 
+spec:
+  replicas: 1
+  serviceName: transmission
+  selector:
+    matchLabels:
+      app: transmission
+  template:
+    metadata:
+      name: transmission
+      labels:
+        app: transmission
+    spec:
+      containers:
+      - name: transmission
+        image: lscr.io/linuxserver/transmission:latest
+        imagePullPolicy: Always
+        env:
+        - name: TZ
+          value: "America/Toronto"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: WHITELIST
+          value: "10.0.0.0/8"
+        ports:
+          - name: transmission
+            containerPort: 9091
+          - name: p2p-tcp
+            containerPort: 51413
+          - name: p2p-udp
+            containerPort: 51413
+            protocol: UDP
+        volumeMounts:
+        - mountPath: "/config"
+          name: transmission-config
+        - mountPath: "/downloads"
+          name: completed-downloads
+      nodeSelector:
+        hiperf: "true"
+      volumes:
+        - name: transmission-config
+          configMap:
+            name: transmission-config
+        - name: completed-downloads
+          nfs:
+            server: library.faircloth.ca
+            path: /volume1/downloads/completed_torrents
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
