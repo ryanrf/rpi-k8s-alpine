@@ -5,7 +5,9 @@ all:
         rpi31.faircloth.ca
     agent:
       hosts:
-        rpi32.faircloth.ca:
+        rpi40.faircloth.ca:
+          labels:
+            hiperf: "true"
         rpi41.faircloth.ca:
           taints:
             - plex=true:NoSchedule

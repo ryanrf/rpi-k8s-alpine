@@ -78,16 +78,16 @@
     - debug:
         msg: "remount {{ remount }}"
 
-    - name: cloudflare API secret
-      block:  
-        - name: create cloudflare API secret
-          ansible.builtin.command: /usr/bin/kubectl -n kube-system create secret generic cloudflare-credentials --from-literal=cloudflareApiKey={{ cloudflare_traefik_api_key }}
-          when: "'server' in group_names"
-
-      rescue:
-        - name: update cloudflare API secret
-          ansible.builtin.command: "/usr/bin/kubectl -n kube-system patch secret cloudflare-credentials --type='json' -p='[{\"op\" : \"replace\" ,\"path\" : \"/data/cloudflareApiKey\" ,\"value\" : \"{{ cloudflare_traefik_api_key | b64encode }}\"}]'"
-          when: "'server' in group_names"
+#    - name: cloudflare API secret
+#      block:  
+#        - name: create cloudflare API secret
+#          ansible.builtin.command: /usr/bin/kubectl -n kube-system create secret generic cloudflare-credentials --from-literal=cloudflareApiKey={{ cloudflare_traefik_api_key }}
+#          when: "'server' in group_names"
+#
+#      rescue:
+#        - name: update cloudflare API secret
+#          ansible.builtin.command: "/usr/bin/kubectl -n kube-system patch secret cloudflare-credentials --type='json' -p='[{\"op\" : \"replace\" ,\"path\" : \"/data/cloudflareApiKey\" ,\"value\" : \"{{ cloudflare_traefik_api_key | b64encode }}\"}]'"
+#          when: "'server' in group_names"
 
     - name: install custom k8s manifests
       loop: "{{ lookup('fileglob', 'k8s/*.yaml', wantlist=True) }}"
