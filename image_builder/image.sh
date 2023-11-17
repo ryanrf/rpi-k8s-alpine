@@ -77,14 +77,15 @@ flannel_workaround(){
 }
 
 k8s_main(){
-  install_pkg k3s nfs-utils openssh-client-common open-iscsi multipath-tools rpcbind
+  # curl and bash are for use with longhorn, if not using longhorn they can be removed
+  install_pkg k3s nfs-utils openssh-client-common open-iscsi multipath-tools rpcbind curl bash
   flannel_workaround
   install ${INPUT_PATH}/update_os_ab_flash.sh ${ROOTFS_PATH}/sbin/update-rootfs
   # /etc/rancher is only created on first startup, so must be manually created
-  mkdir -p ${ROOTFS_PATH}/etc/rancher
+  mkdir -p ${ROOTFS_PATH}/etc/rancher ${ROOTFS_PATH}/run/k3s
   # chroot_exec rc-update add cgroups default
   chroot_exec rc-update add rpcbind default
-  bind_mount /var/lib /var/log /etc/rancher /etc/iscsi 
+  bind_mount /var/lib /var/log /etc/rancher /etc/iscsi /run/k3s
   install -D ${INPUT_PATH}/bind_mount.sh ${ROOTFS_PATH}/sbin/bindmounts
   sed -i 's;# make sure /data is mounted;/sbin/bindmounts;g' ${ROOTFS_PATH}/etc/init.d/data_prepare
 }

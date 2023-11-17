@@ -2,6 +2,12 @@
 - hosts: all
   become: "yes"
   tasks:
+    # Creating directory to mount k3s run dir - it's big
+    - name: Create k3s run dir
+      file:
+        path: "/data/run/k3s"
+        state: directory
+        mode: '0711' 
     - name: Copy image hash update to remote machine
       copy:
         src: "{{ playbook_dir }}/../image_builder/output/sdcard_update.img.gz.sha256"

@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: nzbget
+  name: mealie
 spec:
   selector:
-    app: nzbget
+    app: mealie
   ports:
     - protocol: TCP
-      port: 6789
-      targetPort: 6789
+      port: 9000
+      targetPort: 9000

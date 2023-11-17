@@ -1,5 +1,5 @@
 #!/bin/sh
-SERVICES="nzbget sonarr radarr organizr plex calibre-web transmission"
+SERVICES="nzbget sonarr radarr organizr plex calibre-web transmission mealie"
 
 if [ ! -z $1 ]
 then

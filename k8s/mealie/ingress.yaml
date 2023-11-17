@@ -1,12 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nzbget
+  name: mealie
 spec:
   rules:
-  - http:
+  - host: recipes.faircloth.ca
+    http:
       paths:
-      - path: /nzbget
+      - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: nzbget
-          servicePort: 6789
+          service:
+            name: mealie
+            port:
+              number: 9000

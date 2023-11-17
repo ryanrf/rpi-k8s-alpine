@@ -48,7 +48,7 @@ Once ansible finishes the hosts should start up k3s.
 ## Upgrading an existing host
 Once an SD card has the proper partition structure (two read-only filesystems, with a writable data partition), the SD cards can be updated without removing them from the raspberry pi node (pretty neat, eh?)
 
-Just make sure to update your existing image (`./build_iamge.sh build`), then run ansible with:
+Just make sure to update your existing image (`./build_image.sh build`), then run ansible with:
 ```shell
 ansible-playbook upgrade_image.yaml
 ```
