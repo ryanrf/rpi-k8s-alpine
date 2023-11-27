@@ -2,7 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: organizr
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
+  ingressClassName: "nginx"
   rules:
   - host: media.faircloth.ca
     http:
@@ -14,3 +17,35 @@ spec:
             name: organizr
             port:
               number: 80
+      - path: /nzbget
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: nzbget
+            port:
+              number: 6789
+      - path: /sonarr
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: sonarr 
+            port: 
+              number: 8989
+      - path: /radarr
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: radarr
+            port:
+              number: 7878
+      - path: /transmission
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: transmission
+            port:
+              number: 9091
+  tls:
+    - hosts:
+      - media.faircloth.ca
+      secretName: k3s-media-net-tls

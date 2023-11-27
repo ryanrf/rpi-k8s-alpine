@@ -62,11 +62,6 @@
             name: k3s
             enabled: yes
 
-        - name: Flannel-arm64 workaround
-          file:
-            src: "/usr/libexec/cni/flannel-arm64"
-            dest: "/usr/libexec/cni/flannel"
-            state: link
       always:
         - name: remount-ro
           register: remount
@@ -78,23 +73,26 @@
     - debug:
         msg: "remount {{ remount }}"
 
-#    - name: cloudflare API secret
-#      block:  
-#        - name: create cloudflare API secret
-#          ansible.builtin.command: /usr/bin/kubectl -n kube-system create secret generic cloudflare-credentials --from-literal=cloudflareApiKey={{ cloudflare_traefik_api_key }}
-#          when: "'server' in group_names"
-#
-#      rescue:
-#        - name: update cloudflare API secret
-#          ansible.builtin.command: "/usr/bin/kubectl -n kube-system patch secret cloudflare-credentials --type='json' -p='[{\"op\" : \"replace\" ,\"path\" : \"/data/cloudflareApiKey\" ,\"value\" : \"{{ cloudflare_traefik_api_key | b64encode }}\"}]'"
-#          when: "'server' in group_names"
-
     - name: install custom k8s manifests
       loop: "{{ lookup('fileglob', 'k8s/*.yaml', wantlist=True) }}"
       copy:
         src: "{{ item }}"
         dest: "/var/lib/rancher/k3s/server/manifests/{{ item.split('/') | last }}"
       when: "'server' in group_names"
+      tags:
+      - k8s
+
+    - name: install custom k8s manifests (templates)
+      template:
+        src: "templates/{{ item }}.tmpl"
+        dest: "/var/lib/rancher/k3s/server/manifests/{{ item }}.yaml"
+      loop:
+        - cloudflare-api-token-secret
+        - cloudflared-credentials-secret
+        - metallb-addresspool
+      when: "'server' in group_names"
+      tags:
+      - k8s
 
     - name: Make sure required services are started
       service:
@@ -103,6 +101,8 @@
       loop:
         - k3s
         - rpcbind
+      tags:
+      - k8s
 
   handlers:
     - name: restart k3s

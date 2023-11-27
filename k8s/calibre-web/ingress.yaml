@@ -2,10 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: calibre-web
-#  annotations:
-#    traefik.ingress.kubernetes.io/router.tls: "true"
-#    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
+  ingressClassName: "nginx"
   rules:
   - host: books.faircloth.ca
     http:
@@ -17,3 +17,7 @@ spec:
             name: calibre-web
             port: 
               number: 8083
+  tls:
+    - hosts:
+      - books.faircloth.ca
+      secretName: k3s-books-net-tls

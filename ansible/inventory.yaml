@@ -2,12 +2,10 @@ all:
   children:
     server:
       hosts:
-        rpi31.faircloth.ca
+        rpi40.faircloth.ca:
+          virtualIp: 10.10.11.30
     agent:
       hosts:
-        rpi40.faircloth.ca:
-          labels:
-            hiperf: "true"
         rpi41.faircloth.ca:
           taints:
             - plex=true:NoSchedule
@@ -15,5 +13,3 @@ all:
           labels:
             plex: "true"
         rpi42.faircloth.ca:
-          labels:
-            hiperf: "true"

@@ -2,7 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: calibre
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
+  ingressClassName: "nginx"
   rules:
   - host: calibre.faircloth.ca
     http:
@@ -14,3 +17,7 @@ spec:
             name: calibre
             port: 
               number: 8080
+  tls:
+    - hosts:
+      - calibre.faircloth.ca
+      secretName: k3s-calibre-net-tls

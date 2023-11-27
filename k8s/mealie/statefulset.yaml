@@ -65,5 +65,3 @@ spec:
         options:
         - name: ndots
           value: "1"
-      nodeSelector:
-        hiperf: "true"

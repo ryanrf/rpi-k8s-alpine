@@ -2,7 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mealie
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
+  ingressClassName: "nginx"
   rules:
   - host: recipes.faircloth.ca
     http:
@@ -14,3 +17,8 @@ spec:
             name: mealie
             port:
               number: 9000
+  tls:
+    - hosts:
+      - recipes.faircloth.ca
+      secretName: k3s-mealie-net-tls
+

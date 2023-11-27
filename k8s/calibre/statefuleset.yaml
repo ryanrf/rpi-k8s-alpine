@@ -33,8 +33,6 @@ spec:
           name: calibre-library
         - mountPath: "/downloads"
           name: completed-torrents 
-      nodeSelector:
-        hiperf: "true"
       volumes:
       - name: calibre-library
         iscsi:
