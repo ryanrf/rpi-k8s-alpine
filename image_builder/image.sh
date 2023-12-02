@@ -54,16 +54,20 @@ bind_mount(){
     fi
     echo "Copying contents from $FULL_SRC to $FULL_DST..."
     mkdir -p $(dirname $FULL_DST)
-    echo "ls -l FULL_SRC -> $FULL_SRC"
     ls -l $FULL_SRC
-    echo "cp -a $FULL_SRC $FULL_DST"
     cp -a $FULL_SRC $FULL_DST
-    echo "ls -l FULL_DST -> $FULL_DST"
     ls -l $FULL_DST
     echo "Done"
-
+    if [ "$SRC" = "/var/lib" ]
+    then
+      echo "DEBUG: found /var/lib"
+      OPTIONS="defaults,bind,rshared"
+    else
+      echo "DEBUG: not /var/lib"
+      OPTIONS="defaults,bind"
+    fi
     echo "Creating bind mount: $DST will be mounted at $SRC"
-    echo "$DST   $SRC    none    defaults,bind       0 0" >> ${ROOTFS_PATH}/etc/fstab
+    echo "$DST   $SRC    none    $OPTIONS       0 0" >> ${ROOTFS_PATH}/etc/fstab
     done
 }
 
