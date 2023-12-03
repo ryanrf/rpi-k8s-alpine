@@ -1,0 +1,83 @@
+---
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+    use: alpine
+
+- name: Set authorized key from local file
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_ecdsa.pub') }}"
+
+- name: Create incomplete-downloads directory
+  file:
+    path: "/data/k3s/incomplete-downloads"
+    state: directory
+    mode: '0755'
+
+- name: Try to copy k3s confd values
+  template:
+    src: "k3s_confd.j2"
+    dest: "/etc/conf.d/k3s"
+  check_mode: true
+  diff: true
+  register: k3s_conf
+
+- name: Try to copy iscsid.conf
+  copy:
+    src: "iscsid.conf"
+    dest: "/etc/iscsi/iscsid.conf"
+  check_mode: true
+  diff: true
+  register: iscsi_conf
+
+- name: Copy config files after remounting filesystem with rw
+  block:
+  - name: stop k3s in order to remount filesystem
+    service:
+      name: k3s
+      state: stopped
+  
+  - name: remount-rw
+    mount:
+      path: /
+      state: remounted
+      opts: rw
+  
+  - name: Copy k3s confd values
+    template:
+      src: "k3s_confd.j2"
+      dest: "/etc/conf.d/k3s"
+    notify:
+      - restart k3s
+  
+  - name: Copy iscsid.conf
+    copy:
+      src: "iscsid.conf"
+      dest: /etc/iscsi/iscsid.conf
+    notify:
+      - restart k3s
+  
+  # Must be done while the root volume is mounted in rw
+  - name: ensure k3s is enabled at startup
+    service:
+      name: k3s
+      enabled: yes
+  when: "k3s_conf.changed or iscsi_conf.changed"
+
+- name: remount-ro
+  mount:
+    path: /
+    state: remounted
+    opts: ro
+
+- name: Make sure required services are started
+  service:
+    name: "{{ item }}"
+    state: started
+  loop:
+    - k3s
+    - rpcbind
+  tags:
+  - k8s

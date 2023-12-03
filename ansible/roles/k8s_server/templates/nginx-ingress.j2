@@ -7,3 +7,9 @@ spec:
   repo: https://kubernetes.github.io/ingress-nginx
   chart: ingress-nginx
   targetNamespace: kube-system
+  set:
+    controller:
+      service:
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "{{ nginx_ip_address }}"
+

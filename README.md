@@ -49,7 +49,7 @@ metallb_address_pool: "10.10.11.21-10.10.11.29"
 ## Provisioning a new host
 Assuming you've built the image and written it to the SD card (`./build_image.sh build`, then `./build_iamge.sh write /dev/sdc` or just `./build_image.sh all /dev/sdc`), you'll then need to have ansible setup the host with:
 ```shell
-ansible-playbook --ask-vault-pass provision.yaml
+ansible-playbook --ask-vault-pass main.yaml
 ```
 Once ansible finishes the hosts should start up k3s.
 
@@ -58,12 +58,14 @@ Once an SD card has the proper partition structure (two read-only filesystems, w
 
 Just make sure to update your existing image (`./build_image.sh build`), then run ansible with:
 ```shell
-ansible-playbook upgrade_image.yaml
+ansible-playbook --ask-vault-pass main.yaml -e upgrade=true
 ```
 > you can optionally limit the host to upgrade with `-l host` like this:
 ```shell
 ansible-playbook -l host.domain.com upgrade_image.yaml
 ```
+
+There have been occassions where after the upgrade ansible cannot recognize a node has booted back up, so just hangs. It may be necessary to ctrl+c, then run the provision playbook (`ansible-playbook --ask-vault-pass main.yaml`)
 
 # Kubernetes
 This k3s cluster is using traefik as the load balancer (which uses klipper underneath) and ingress controller. The `cert-manager` certificate manager is being used to request certificates from let's encrypt using Cloudflare as the verification method. The Cloudflare API key is stored encrypted.

@@ -1,0 +1,19 @@
+---
+- name: install custom k8s manifests
+  copy:
+    src: "{{ item }}"
+    dest: "/var/lib/rancher/k3s/server/manifests/{{ item.split('/') | last }}"
+  with_fileglob: "files/*.yaml"
+  when: "'server' in group_names"
+
+- name: install custom k8s manifests (templates)
+  template:
+    src: "{{ item }}.j2"
+    dest: "/var/lib/rancher/k3s/server/manifests/{{ item }}.yaml"
+  loop:
+    - cloudflare-api-token-secret
+    - cloudflared-credentials-secret
+    - metallb-addresspool
+    - nginx-ingress
+  when: "'server' in group_names"
+

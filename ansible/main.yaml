@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: "yes"
+  roles:
+    - role: roles/upgrade_image
+      vars:
+        upgrade: false
+      when: upgrade
+    - role: roles/provision
+    - role: roles/k8s_server
+      tags:
+        - k8s
+
