@@ -17,7 +17,7 @@ spec:
       hostNetwork: true
       containers:
       - name: plex
-        image: lscr.io/linuxserver/plex:1.32.5
+        image: lscr.io/linuxserver/plex:latest
         imagePullPolicy: Always
         env:
         - name: TZ

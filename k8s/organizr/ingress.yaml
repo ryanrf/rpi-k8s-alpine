@@ -45,6 +45,13 @@ spec:
             name: transmission
             port:
               number: 9091
+      - path: /sabnzbd
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: sabnzbd
+            port:
+              number: 8080
   tls:
     - hosts:
       - media.faircloth.ca
