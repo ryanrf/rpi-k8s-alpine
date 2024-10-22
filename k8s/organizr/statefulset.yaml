@@ -16,15 +16,13 @@ spec:
     spec:
       containers:
       - name: organizr
-        image: organizr/organizr:latest
+        image: ghcr.io/organizr/organizr:version-f6d984d2
         imagePullPolicy: Always
         env:
         - name: PUID
           value: "1000"
         - name: PGID
           value: "1000"
-        - name: fpm
-          value: "true"
         ports:
           - name: organizr
             containerPort: 80 

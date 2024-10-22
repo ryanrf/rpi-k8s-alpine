@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: radarr
-        image: lscr.io/linuxserver/radarr:latest
+        image: linuxserver/radarr:5.12.2
         imagePullPolicy: Always
         env:
         - name: TZ

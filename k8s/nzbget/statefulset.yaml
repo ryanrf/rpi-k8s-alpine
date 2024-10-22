@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nzbget
-        image: lscr.io/linuxserver/nzbget:latest
+        image: lscr.io/linuxserver/nzbget:24.3.20241018
         imagePullPolicy: Always
         env:
         - name: TZ
