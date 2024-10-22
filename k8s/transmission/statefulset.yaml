@@ -39,19 +39,18 @@ spec:
       volumes:
         - name: transmission-config
           iscsi:
-            targetPortal: 10.10.11.5:3260
-            iqn: iqn.2000-01.com.synology:Library.transmission-config
-            lun: 1
+            targetPortal: 10.10.11.6:3260
+            iqn: iqn.2024-10.ca.faircloth.nas:transmission-config
             fsType: ext4
             readOnly: false
         - name: complete-downloads
           nfs:
-            server: library.faircloth.ca
-            path: /volume1/downloads/completed_torrents
+            server: nas.faircloth.ca
+            path: /Volume1/downloads/completed_torrents
         - name: incomplete-downloads
           nfs:
-            server: library.faircloth.ca
-            path: /volume1/downloads/incomplete_torrents
+            server: nas.faircloth.ca
+            path: /Volume1/downloads/incomplete_torrents
       dnsConfig:
         options:
         - name: ndots

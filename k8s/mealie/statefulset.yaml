@@ -56,9 +56,8 @@ spec:
       volumes:
         - name: mealie-data
           iscsi:
-            targetPortal: 10.10.11.5:3260
-            iqn: iqn.2000-01.com.synology:Library.mealie-data
-            lun: 1
+            targetPortal: 10.10.11.6:3260
+            iqn: iqn.2024-10.ca.faircloth.nas:mealie-data
             fsType: ext4
             readOnly: false
       dnsConfig:

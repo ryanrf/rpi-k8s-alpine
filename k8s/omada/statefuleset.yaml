@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: omada
-        image: mbentley/omada-controller:latest
+        image: mbentley/omada-controller:5.14
         imagePullPolicy: Always
         env:
         - name: MANAGE_HTTP_PORT
@@ -80,8 +80,7 @@ spec:
       volumes:
       - name: omada-data
         iscsi:
-          targetPortal: 10.10.11.5:3260
-          iqn: iqn.2000-01.com.synology:Library.omada-config
-          lun: 1
+          targetPortal: 10.10.11.6:3260
+          iqn: iqn.2024-10.ca.faircloth.nas:omada-data
           fsType: ext4
           readOnly: false

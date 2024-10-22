@@ -47,8 +47,8 @@ spec:
             path: /data/k3s/incomplete-downloads
         - name: completed-downloads
           nfs:
-            server: library.faircloth.ca
-            path: /volume1/downloads/completed
+            server: nas.faircloth.ca
+            path: /Volume1/downloads/completed
       dnsConfig:
         options:
         - name: ndots

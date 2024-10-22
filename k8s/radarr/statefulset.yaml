@@ -40,23 +40,22 @@ spec:
       volumes:
       - name: radarr-config
         iscsi:
-          targetPortal: 10.10.11.5:3260
-          iqn: iqn.2000-01.com.synology:Library.radarr-config
-          lun: 1
+          targetPortal: 10.10.11.6:3260
+          iqn: iqn.2024-10.ca.faircloth.nas:radarr-config
           fsType: ext4
           readOnly: false
       - name: completed-downloads
         nfs:
-          server: library.faircloth.ca
-          path: /volume1/downloads/completed
+          server: nas.faircloth.ca
+          path: /Volume1/downloads/completed
       - name: movies
         nfs:
-          server: library.faircloth.ca
-          path: /volume1/Videos/Movies
+          server: nas.faircloth.ca
+          path: /Volume1/videos/Movies
       - name: completed-torrents
         nfs:
-          server: library.faircloth.ca
-          path: /volume1/downloads/completed_torrents
+          server: nas.faircloth.ca
+          path: /Volume1/downloads/completed_torrents
       dnsConfig:
         options:
         - name: ndots
