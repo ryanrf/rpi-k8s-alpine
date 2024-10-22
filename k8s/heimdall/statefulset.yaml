@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: heimdall 
+spec:
+  replicas: 1
+  serviceName: heimdall
+  selector:
+    matchLabels:
+      app: heimdall
+  template:
+    metadata:
+      name: heimdall
+      labels:
+        app: heimdall
+    spec:
+      containers:
+      - name: heimdall
+        image: lscr.io/linuxserver/heimdall:2.6.1
+        imagePullPolicy: Always
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/Toronto
+        ports:
+          - name: heimdall
+            containerPort: 80 
+        volumeMounts:
+        - mountPath: "/config"
+          name: heimdall-config
+      volumes:
+      - name: heimdall-config
+        iscsi:
+          targetPortal: 10.10.11.6:3260
+          iqn: iqn.2024-10.ca.faircloth.nas:heimdall-config
+          fsType: ext4
+          readOnly: false

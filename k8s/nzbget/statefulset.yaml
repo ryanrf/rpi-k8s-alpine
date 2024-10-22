@@ -38,9 +38,8 @@ spec:
       volumes:
         - name: nzbget-config
           iscsi:
-            targetPortal: 10.10.11.5:3260
-            iqn: iqn.2000-01.com.synology:Library.nzbget-config
-            lun: 1
+            targetPortal: 10.10.11.6:3260
+            iqn: iqn.2024-10.ca.faircloth.nas:nzbget-config
             fsType: ext4
             readOnly: false
         - name: incomplete-downloads

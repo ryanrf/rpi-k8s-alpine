@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: transmission
-        image: ghcr.io/ryanrf/transmission:4.0.6
+        image: linuxserver/transmission:4.0.6
         imagePullPolicy: Always
         env:
         - name: TZ

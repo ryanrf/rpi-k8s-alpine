@@ -36,15 +36,13 @@ spec:
       volumes:
       - name: calibre-web-config
         iscsi:
-          targetPortal: 10.10.11.5:3260
-          iqn: iqn.2000-01.com.synology:Library.calibre-web-config
-          lun: 1
+          targetPortal: 10.10.11.6:3260
+          iqn: iqn.2024-10.ca.faircloth.nas:calibre-web-config
           fsType: ext4
           readOnly: false
       - name: calibre-library
         iscsi:
-          targetPortal: 10.10.11.5:3260
-          iqn: iqn.2000-01.com.synology:Library.calibre-library
-          lun: 1
+          targetPortal: 10.10.11.6:3260
+          iqn: iqn.2024-10.ca.faircloth.nas:calibre-library
           fsType: ext4
           readOnly: false
