@@ -22,9 +22,9 @@ spec:
         - name: TZ
           value: "America/Toronto"
         - name: PUID
-          value: "1000"
+          value: "1008"
         - name: PGID
-          value: "1000"
+          value: "6"
         ports:
           - name: sonarr
             containerPort: 8989 

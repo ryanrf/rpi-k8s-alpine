@@ -21,6 +21,10 @@ spec:
         env:
         - name: TZ
           value: "America/Toronto"
+        - name: PUID
+          value: "1008"
+        - name: PGID
+          value: "6"
         ports:
           - name: transmission
             containerPort: 9091

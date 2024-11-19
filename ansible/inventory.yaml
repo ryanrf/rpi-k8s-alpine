@@ -7,9 +7,4 @@ all:
     agent:
       hosts:
         rpi41.faircloth.ca:
-          taints:
-            - plex=true:NoSchedule
-            - plex=true:NoExecute
-          labels:
-            plex: "true"
         rpi42.faircloth.ca:

@@ -2,12 +2,22 @@
 ## Usage
 Update single node:
 ```bash
-ansible-playbook -l rpi31.faircloth.ca playbook.yaml --ask-vault-pass
+ansible-playbook -l rpi41.faircloth.ca main.yaml
 ```
 
 Update all nodes:
 ```bash
-ansible-playbook playbook.yaml --ask-vault-pass
+ansible-playbook main.yaml --ask-vault-pass
+```
+
+Upgrade image on a single node (recommended one at a time):
+```
+ansible-playbook --extra-vars "upgrade=true" -l rpi41.faircloth.ca main.yaml
+```
+
+Upgarde image on all nodes:
+```
+ansible-playbook --extra-vars "upgrade=true" main.yaml
 ```
 
 ## Additional k8s manifests
