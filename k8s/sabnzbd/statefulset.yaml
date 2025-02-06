@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sabnzbd 
+spec:
+  replicas: 1
+  serviceName: sabnzbd
+  selector:
+    matchLabels:
+      app: sabnzbd
+  template:
+    metadata:
+      name: sabnzbd
+      labels:
+        app: sabnzbd
+    spec:
+      containers:
+      - name: sabnzbd
+        image: lscr.io/linuxserver/sabnzbd:4.4.1
+        imagePullPolicy: Always
+        env:
+        - name: TZ
+          value: "America/Toronto"
+        - name: PUID
+          value: "1008"
+        - name: PGID
+          value: "6"
+        ports:
+          - name: sabnzbd
+            containerPort: 8080
+        volumeMounts:
+        - mountPath: "/config"
+          name: sabnzbd-config
+        - mountPath: "/downloads"
+          name: completed-downloads
+        - mountPath: "/incomplete-downloads"
+          name: incomplete-downloads
+      volumes:
+        - name: sabnzbd-config
+          iscsi:
+            targetPortal: 10.10.11.6:3260
+            iqn: iqn.2025-01.ca.faircloth.nas:sabnzbd-config
+            fsType: ext4
+            readOnly: false
+        - name: incomplete-downloads
+          hostPath:
+            path: /data/k3s/incomplete-downloads
+        - name: completed-downloads
+          nfs:
+            server: nas.faircloth.ca
+            path: /Volume1/downloads/completed
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"

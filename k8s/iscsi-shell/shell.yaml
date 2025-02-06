@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: iscsi-shell
+spec:
+  restartPolicy: Never
+  containers:
+  - name: iscsi-shell
+    image: nginx:latest
+    imagePullPolicy: Always
+    volumeMounts:
+    - mountPath: "/data"
+      name: data
+  volumes:
+    - name: data
+      iscsi:
+        targetPortal: 10.10.11.6:3260
+        iqn: iqn.2025-01.ca.faircloth.nas:sabnzbd-config
+        fsType: ext4
+        readOnly: false

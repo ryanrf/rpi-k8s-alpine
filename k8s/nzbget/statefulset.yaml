@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nzbget
-        image: lscr.io/linuxserver/nzbget:24.3.20241018
+        image: lscr.io/linuxserver/nzbget:24.5.20250131
         imagePullPolicy: Always
         env:
         - name: TZ
@@ -35,6 +35,12 @@ spec:
           name: completed-downloads
         - mountPath: "/downloads/incomplete"
           name: incomplete-downloads
+        - mountPath: "/downloads/nzb"
+          name: nzb-upload
+        - mountPath: "/downloads/tmp"
+          name: nzb-temp
+        - mountPath: "/downloads/logs"
+          name: nzb-logs
       volumes:
         - name: nzbget-config
           iscsi:
@@ -49,6 +55,18 @@ spec:
           nfs:
             server: nas.faircloth.ca
             path: /Volume1/downloads/completed
+        - name: nzb-upload
+          nfs:
+            server: nas.faircloth.ca
+            path: /Volume1/downloads/nzb_upload
+        - name: nzb-temp
+          nfs:
+            server: nas.faircloth.ca
+            path: /Volume1/downloads/nzb_temp
+        - name: nzb-logs
+          nfs:
+            server: nas.faircloth.ca
+            path: /Volume1/downloads/nzb_logs
       dnsConfig:
         options:
         - name: ndots
