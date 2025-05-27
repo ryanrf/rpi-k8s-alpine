@@ -15,3 +15,6 @@ directory:
 use the `sdcard_update.img.gz` to write to the other filesystem.
 The script `update_os_ab_flash.sh` can be used to write to the other filesystem
 after moving the update image to the host system.
+
+# Updates
+Updates can be found [here](https://github.com/raspi-alpine/builder)

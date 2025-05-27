@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: calibre-web
-        image: lscr.io/linuxserver/calibre-web:0.6.24
+        image: lscr.io/linuxserver/calibre-web@sha256:148f4ce06b61e67457351dd8015983b3bea57623ddfc52d1b6f9f443fb786874
         imagePullPolicy: Always
         env:
         - name: TZ

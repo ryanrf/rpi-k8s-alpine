@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nzbget
-        image: lscr.io/linuxserver/nzbget:24.5.20250131
+        image: lscr.io/linuxserver/nzbget:v25.0-ls199
         imagePullPolicy: Always
         env:
         - name: TZ
@@ -49,8 +49,9 @@ spec:
             fsType: ext4
             readOnly: false
         - name: incomplete-downloads
-          hostPath:
-            path: /data/k3s/incomplete-downloads
+          nfs:
+            server: nas.faircloth.ca
+            path: /Volume1/downloads/nzb_incomplete
         - name: completed-downloads
           nfs:
             server: nas.faircloth.ca

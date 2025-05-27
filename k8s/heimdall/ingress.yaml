@@ -4,7 +4,7 @@ metadata:
   name: heimdall
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "30m"
 spec:
   ingressClassName: "nginx"
   rules:
