@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: heimdall
-        image: lscr.io/linuxserver/heimdall:2.6.3
+        image: lscr.io/linuxserver/heimdall:v2.6.3-ls312
         imagePullPolicy: Always
         env:
         - name: PUID

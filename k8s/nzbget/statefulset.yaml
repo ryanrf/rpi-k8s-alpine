@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nzbget
-        image: lscr.io/linuxserver/nzbget:v25.0-ls199
+        image: lscr.io/linuxserver/qbittorrent:5.1.2-r2-ls415
         imagePullPolicy: Always
         env:
         - name: TZ

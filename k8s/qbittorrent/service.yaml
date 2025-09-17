@@ -1,27 +1,25 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: transmission
+  name: qbittorrent
 spec:
   selector:
-    app: transmission
+    app: qbittorrent
   ports:
-    - name: web-interface
+    - name: web-interfaace
       protocol: TCP
-      port: 9091
-      targetPort: 9091
+      port: 8080
+      targetPort: 8080
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: transmission-lb
-  annotations:
-    metallb.io/loadBalancerIPs: 10.10.11.22
+  name: qbittorrent-lb
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   selector:
-    statefulset.kubernetes.io/pod-name: transmission-0
+    statefulset.kubernetes.io/pod-name: qbittorrent-0
   ports:
     - name: p2p-tcp
       protocol: TCP

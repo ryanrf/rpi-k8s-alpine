@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: transmission 
+  name: qbittorrent 
 spec:
   replicas: 1
-  serviceName: transmission
+  serviceName: qbittorrent
   selector:
     matchLabels:
-      app: transmission
+      app: qbittorrent
   template:
     metadata:
-      name: transmission
+      name: qbittorrent
       labels:
-        app: transmission
+        app: qbittorrent
     spec:
       containers:
-      - name: transmission
-        image: linuxserver/transmission:4.0.6-r4-ls310
+      - name: qbittorrent
+        image: lscr.io/linuxserver/qbittorrent:5.1.2-r2-ls415
         imagePullPolicy: Always
         env:
         - name: TZ
@@ -25,26 +25,30 @@ spec:
           value: "1008"
         - name: PGID
           value: "6"
+        - name: WEBUI_PORT
+          value: "8080"
+        - name: TORRENTING_PORT
+          value: "51413"
         ports:
-          - name: transmission
-            containerPort: 9091
+          - name: qbittorrent
+            containerPort: 8080
           - name: p2p-tcp
             containerPort: 51413
           - name: p2p-udp
             containerPort: 51413
             protocol: UDP
         volumeMounts:
-        - mountPath: /etc/transmission/
-          name: transmission-config
+        - mountPath: /config
+          name: qbittorrent-config
         - mountPath: "/downloads/complete"
           name: complete-downloads
         - mountPath: "/downloads/incomplete"
           name: incomplete-downloads
       volumes:
-        - name: transmission-config
+        - name: qbittorrent-config
           iscsi:
             targetPortal: 10.10.11.6:3260
-            iqn: iqn.2024-10.ca.faircloth.nas:transmission-config
+            iqn: iqn.2025-09.ca.faircloth.nas:qbittorrent-config
             fsType: ext4
             readOnly: false
         - name: complete-downloads

@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: radarr 
+  name: lidarr 
 spec:
   replicas: 1
-  serviceName: radarr
+  serviceName: lidarr
   selector:
     matchLabels:
-      app: radarr
+      app: lidarr
   template:
     metadata:
-      name: radarr
+      name: lidarr
       labels:
-        app: radarr
+        app: lidarr
     spec:
       containers:
-      - name: radarr
-        image: linuxserver/radarr:5.26.2.10099-ls278
+      - name: lidarr
+        image: linuxserver/lidarr:2.12.4.4658-ls46
         imagePullPolicy: Always
         env:
         - name: TZ
@@ -26,36 +26,30 @@ spec:
         - name: PGID
           value: "6"
         ports:
-          - name: radarr
-            containerPort: 7878
+          - name: lidarr
+            containerPort: 8686
         volumeMounts:
         - mountPath: "/config"
-          name: radarr-config
+          name: lidarr-config
         - mountPath: "/downloads/completed"
           name: completed-downloads
-        - mountPath: "/movies"
-          name: movies
-        - mountPath: "/torrents"
-          name: completed-torrents
+        - mountPath: "/music"
+          name: music
       volumes:
-      - name: radarr-config
+      - name: lidarr-config
         iscsi:
           targetPortal: 10.10.11.6:3260
-          iqn: iqn.2024-10.ca.faircloth.nas:radarr-config
+          iqn: iqn.2025-07.ca.faircloth.nas:lidarr-config
           fsType: ext4
           readOnly: false
       - name: completed-downloads
         nfs:
           server: nas.faircloth.ca
           path: /Volume1/downloads/completed
-      - name: movies
+      - name: music
         nfs:
           server: nas.faircloth.ca
-          path: /Volume1/videos/Movies
-      - name: completed-torrents
-        nfs:
-          server: nas.faircloth.ca
-          path: /Volume1/downloads/completed_torrents
+          path: /Volume1/music
       dnsConfig:
         options:
         - name: ndots
