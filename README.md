@@ -1,3 +1,6 @@
+> [!WARNING]
+> This project has been archived. It has been replaced by [this project](https://github.com/ryanrf/k8s-homelab).
+
 # Raspberry Pi Kubernetes Cluster
 __This project is based on [raspi-alpine](https://github.com/raspi-alpine/builder)__
 
